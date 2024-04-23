@@ -77,6 +77,8 @@ TEMPLATES = [
     },
 ]
 
+AUTH_USER_MODEL = 'rest.GameUser'
+
 WSGI_APPLICATION = 'sea_battle.wsgi.application'
 
 
