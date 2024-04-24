@@ -7,8 +7,19 @@ class Board(models.Model):
     player = models.OneToOneField(GameUser, on_delete=models.CASCADE, related_name='board')
 
 class Cell(models.Model):
-    is_ship = models.BooleanField()
-    is_shooted = models.BooleanField()
+    EMPTY = "  "
+    SHIP = "S "
+    SHIP_HIT = "SX"
+    MISS = " X"
+    
+    STATE_CHOICES = [
+        (EMPTY, 'empty'),
+        (SHIP, 'ship'),
+        (SHIP_HIT, 'ship hit'),
+        (MISS, 'miss'),
+    ]
+    
+    state = models.CharField(max_length=2, choices=STATE_CHOICES, default=EMPTY)
     coordinate_y = models.IntegerField()
     coordinate_x = models.IntegerField()
     board = models.ForeignKey(Board, on_delete=models.CASCADE, related_name='cells')
