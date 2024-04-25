@@ -1,10 +1,11 @@
 from django.shortcuts import render
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound
+from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin
 
-from .serializers import BoardSerializer
-from .models import Board, Cell
+from .serializers import BoardSerializer, GameUserRegisterSerializer, GameUserSerializer
+from .models import Board, Cell, GameUser
 
 class SetBoardViewSet(ModelViewSet):
     serializer_class = BoardSerializer
@@ -27,3 +28,14 @@ class SetBoardViewSet(ModelViewSet):
         owner = self.request.user
         serializer.save(player=owner)
 
+
+class UserRegisterViewSet(CreateModelMixin, RetrieveModelMixin, GenericViewSet):
+    
+    def get_serializer_class(self):
+        if self.request.method.lower() == 'post':
+            return GameUserRegisterSerializer
+        elif self.request.method.lower() == 'get':
+            return GameUserSerializer
+    
+    def get_object(self):
+        return self.request.user

@@ -2,7 +2,6 @@ from .models import Board, GameUser, Cell
 from rest_framework.serializers import ModelSerializer
 
 
-
 class CellSerializer(ModelSerializer):
     class Meta:
         model = Cell
@@ -25,4 +24,19 @@ class BoardSerializer(ModelSerializer):
             Cell.objects.update_or_create(board=board, **cell, defaults={"state": state})
         return board
         
+        
+class GameUserRegisterSerializer(ModelSerializer):
+    class Meta:
+        model = GameUser
+        fields = ['id', 'username', 'password']
+        extra_kwargs = {'password': {'write_only': True, 'style': {'input_type': 'password'}}}
+
+        
+    def create(self, validated_data):
+        return GameUser.objects.create_user(**validated_data)
     
+    
+class GameUserSerializer(ModelSerializer):
+    class Meta:
+        model = GameUser
+        fields = ['id', 'username']

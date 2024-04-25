@@ -1,8 +1,10 @@
+from typing import Any
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 class GameUser(AbstractUser):
     pass
+
 class Board(models.Model):
     player = models.OneToOneField(GameUser, on_delete=models.CASCADE, related_name='board')
 
