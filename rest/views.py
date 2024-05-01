@@ -1,8 +1,9 @@
 from django.shortcuts import render
+from django.http import Http404
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound
-from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin
+from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, ListModelMixin
 
 from .serializers import BoardSerializer, GameUserRegisterSerializer, GameUserSerializer
 from .models import Board, Cell, GameUser
@@ -36,6 +37,20 @@ class UserRegisterViewSet(CreateModelMixin, RetrieveModelMixin, GenericViewSet):
             return GameUserRegisterSerializer
         elif self.request.method.lower() == 'get':
             return GameUserSerializer
+    
+    def get_object(self):
+        return self.request.user
+    
+
+class PlayersListViewSet(ListModelMixin, GenericViewSet):
+    serializer_class = GameUserSerializer
+    
+    def get_queryset(self):
+        queryset = GameUser.objects.exclude(id=self.request.user.id)
+        return queryset
+
+class UserProfileViewSet(RetrieveModelMixin, GenericViewSet):
+    serializer_class = GameUserSerializer
     
     def get_object(self):
         return self.request.user

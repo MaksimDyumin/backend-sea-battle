@@ -8,6 +8,9 @@ class GameUser(AbstractUser):
 class Board(models.Model):
     player = models.OneToOneField(GameUser, on_delete=models.CASCADE, related_name='board')
 
+class Ship(models.Model):
+    board = models.ForeignKey(Board, on_delete=models.CASCADE, related_name='ships')
+
 class Cell(models.Model):
     EMPTY = "  "
     SHIP = "S "
@@ -25,3 +28,5 @@ class Cell(models.Model):
     coordinate_y = models.IntegerField()
     coordinate_x = models.IntegerField()
     board = models.ForeignKey(Board, on_delete=models.CASCADE, related_name='cells')
+    ship = models.ForeignKey(Ship, on_delete=models.CASCADE, related_name='cells', null=True, blank=True)
+
